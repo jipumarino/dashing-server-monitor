@@ -17,7 +17,6 @@ loop do
   }
 
   hostname = sigar.net_info.host_name
-  puts "curl -s -d '#{data.to_json}' http://#{config["dashboard_hostname"]}/widgets/server-#{hostname}"
   `curl -s -d '#{data.to_json}' http://#{config["dashboard_hostname"]}/widgets/server-#{hostname}`
 
   sleep(15)
