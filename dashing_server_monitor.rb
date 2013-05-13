@@ -1,6 +1,7 @@
 require 'json'
 require 'yaml'
 require 'sigar'
+require 'net/http'
 
 config = YAML.load_file File.join(File.dirname(__FILE__), 'config.yml')
 
@@ -14,7 +15,9 @@ loop do
     auth_token: config["auth_token"]
   }
 
-  `curl -s -d '#{data.to_json}' http://#{config["dashboard_hostname"]}/widgets/server-#{sigar.net_info.host_name}`
+  req = Net::HTTP::Post.new("/widgets/server-#{sigar.net_info.host_name}", initheader = {'Content-Type' =>'application/json'})
+  req.body = data.to_json
+  response = Net::HTTP.new(config["dashboard_hostname"]).start {|http| http.request(req) }
 
   sleep 15
 end
