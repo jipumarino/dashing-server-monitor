@@ -1,6 +1,5 @@
 require 'json'
 require 'yaml'
-require 'socket'
 require 'sigar'
 
 path = File.expand_path(File.dirname(__FILE__))
