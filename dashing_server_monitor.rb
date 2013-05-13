@@ -2,8 +2,7 @@ require 'json'
 require 'yaml'
 require 'sigar'
 
-path = File.expand_path(File.dirname __FILE__)
-config = YAML.load_file "#{path}/config.yml"
+config = YAML.load_file File.join(File.dirname(__FILE__), 'config.yml')
 
 loop do
   sigar = Sigar.new

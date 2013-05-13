@@ -1,2 +1,2 @@
 require 'daemons'
-Daemons.run('dashing_server_monitor.rb')
+Daemons.run File.join(File.dirname(__FILE__), 'dashing_server_monitor.rb')
