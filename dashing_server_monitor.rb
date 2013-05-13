@@ -1,38 +1,24 @@
 require 'json'
 require 'yaml'
+require 'socket'
+require 'sigar'
 
 path = File.expand_path(File.dirname(__FILE__))
 config = YAML.load_file("#{path}/config.yml")
 
-# Hostname
-hostname = `hostname`
-
 loop do
-  # HDD
-  df_string = `df`
-  percents = df_string.split("\n")[1..-1].map do |line|
-    line.split(" ")[4].to_i
-  end
-  hdd = percents.max
-
-  # Memory
-  free_string = `free`
-  values = free_string.split("\n")[1].split(" ")
-  mem = (values[2].to_f/values[1].to_f*100.0).round
-
-  # Load
-  uptime_string = `uptime`
-  load = uptime_string.match(/load average: ([^,]+),/)[1]
+  sigar = Sigar.new
 
   data = {
-    load: load,
-    mem: mem,
-    hdd: hdd,
+    load: sigar.loadavg.first.round(2),
+    mem: (sigar.mem.actual_used.to_f/sigar.mem.total.to_f*100).round(1),
+    hdd: sigar.file_system_list.map{|fs| sigar.file_system_usage(fs.dir_name).use_percent*100}.max.round(1),
     auth_token: config["auth_token"]
   }
 
-  `curl -s -d '#{data.to_json}' http://#{config["dashboard_hostname"]}/widgets/server-#{hostname}`
+  hostname = sigar.net_info.host_name
   puts "curl -s -d '#{data.to_json}' http://#{config["dashboard_hostname"]}/widgets/server-#{hostname}"
+  `curl -s -d '#{data.to_json}' http://#{config["dashboard_hostname"]}/widgets/server-#{hostname}`
 
   sleep(15)
 end

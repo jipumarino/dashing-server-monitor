@@ -2,9 +2,11 @@ GEM
   remote: https://rubygems.org/
   specs:
     daemons (1.1.9)
+    sigar (0.7.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   daemons
+  sigar
