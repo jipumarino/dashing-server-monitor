@@ -2,8 +2,8 @@ require 'json'
 require 'yaml'
 require 'sigar'
 
-path = File.expand_path(File.dirname(__FILE__))
-config = YAML.load_file("#{path}/config.yml")
+path = File.expand_path(File.dirname __FILE__)
+config = YAML.load_file "#{path}/config.yml"
 
 loop do
   sigar = Sigar.new
@@ -15,8 +15,7 @@ loop do
     auth_token: config["auth_token"]
   }
 
-  hostname = sigar.net_info.host_name
-  `curl -s -d '#{data.to_json}' http://#{config["dashboard_hostname"]}/widgets/server-#{hostname}`
+  `curl -s -d '#{data.to_json}' http://#{config["dashboard_hostname"]}/widgets/server-#{sigar.net_info.host_name}`
 
-  sleep(15)
+  sleep 15
 end
