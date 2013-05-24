@@ -2,7 +2,6 @@ GEM
   remote: https://rubygems.org/
   specs:
     curb (0.8.4)
-    daemons (1.1.9)
     sigar (0.7.2)
 
 PLATFORMS
@@ -10,5 +9,4 @@ PLATFORMS
 
 DEPENDENCIES
   curb
-  daemons
   sigar
